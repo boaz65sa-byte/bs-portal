@@ -9,9 +9,9 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default function App() {
   const [projects, setProjects] = useState([]);
-  const [errorMsg, setErrorMsg] = useState(null); // משתנה לשמירת שגיאות
+  const [errorMsg, setErrorMsg] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [debugInfo, setDebugInfo] = useState({}); // מידע טכני לפתרון בעיות
+  const [debugInfo, setDebugInfo] = useState({});
 
   useEffect(() => {
     async function debugFetch() {
@@ -19,22 +19,18 @@ export default function App() {
         setLoading(true);
         setErrorMsg(null);
         
-        // 1. בדיקה האם המפתחות קיימים
+        // בדיקת מפתחות
         if (!supabaseUrl || !supabaseKey) {
           throw new Error("Missing API Keys! Check Vercel Environment Variables.");
         }
 
         setDebugInfo(prev => ({ ...prev, url: supabaseUrl, hasKey: !!supabaseKey }));
 
-        // 2. ניסיון למשוך נתונים (בלי מיונים מסובכים)
-        console.log("Fetching projects...");
+        // משיכת נתונים
         const { data, error } = await supabase.from('projects').select('*');
 
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
 
-        // 3. הצלחה
         setProjects(data || []);
         setDebugInfo(prev => ({ ...prev, count: data?.length || 0 }));
 
@@ -49,47 +45,57 @@ export default function App() {
     debugFetch();
   }, []);
 
-  // תצוגה
   return (
     <div className="min-h-screen bg-slate-900 text-white p-8 font-sans" dir="rtl">
       
-      <h1 className="text-4xl font-black mb-8 text-center text-blue-500">בדיקת מערכת BS-SIMPLE</h1>
+      <h1 className="text-4xl font-black mb-8 text-center text-blue-500">בדיקת מערכת</h1>
 
-      {/* אזור הדיבוג - מופיע רק אם יש בעיות */}
       <div className="max-w-2xl mx-auto space-y-6">
         
-        {/* בדיקת טעינה */}
+        {/* טעינה */}
         {loading && (
           <div className="p-6 bg-blue-900/30 border border-blue-500 rounded-xl text-center animate-pulse">
             <h2 className="text-xl font-bold">...בודק חיבור לשרת</h2>
           </div>
         )}
 
-        {/* הצגת שגיאה קריטית */}
+        {/* שגיאה */}
         {errorMsg && (
           <div className="p-6 bg-red-900/50 border-2 border-red-500 rounded-xl">
             <h2 className="text-2xl font-bold text-red-400 mb-2">❌ זוהתה שגיאה:</h2>
             <p className="font-mono text-lg bg-black/30 p-4 rounded text-white">{errorMsg}</p>
-            <p className="mt-4 text-sm text-gray-300">צלם את המסך הזה ושלח לי</p>
           </div>
         )}
 
-        {/* הצגת סטטוס אם אין שגיאה אבל גם אין פרויקטים */}
+        {/* טבלה ריקה */}
         {!loading && !errorMsg && projects.length === 0 && (
           <div className="p-6 bg-yellow-900/30 border border-yellow-500 rounded-xl text-center">
             <h2 className="text-xl font-bold text-yellow-400">⚠️ החיבור הצליח, אבל הטבלה ריקה</h2>
-            <p className="mt-2">הנתונים הגיעו מ-Supabase, אבל הרשימה ריקה (0 פרויקטים).</p>
             <div className="mt-4 text-left bg-black/30 p-4 rounded text-xs font-mono text-gray-400">
               Debug Info: {JSON.stringify(debugInfo, null, 2)}
             </div>
           </div>
         )}
 
-        {/* הצגת הפרויקטים אם הכל עובד */}
+        {/* הצלחה - רשימת פרויקטים */}
         {projects.length > 0 && (
           <div className="grid gap-4">
             <div className="p-4 bg-green-900/30 border border-green-500 rounded-xl text-center mb-4">
               <h2 className="text-xl font-bold text-green-400">✅ הכל תקין! ({projects.length} פרויקטים)</h2>
             </div>
-            {projects.map(p => (
-              <div key={p.id} className="p-6 bg-slate-800
+            {projects.map((p) => (
+              <div key={p.id} className="p-6 bg-slate-800 rounded-xl border border-slate-700 flex justify-between items-center">
+                <div>
+                  <h3 className="text-xl font-bold">{p.name_he || p.name_en}</h3>
+                  <a href={p.url} className="text-blue-400 underline text-sm">{p.url}</a>
+                </div>
+                <div className="w-6 h-6 rounded-full border border-white/20" style={{backgroundColor: p.accent_color}}></div>
+              </div>
+            ))}
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
