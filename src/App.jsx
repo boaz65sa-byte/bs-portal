@@ -135,4 +135,141 @@ export default function App() {
         {/* טקסט הסבר על החברה */}
         <p className="text-lg md:text-2xl text-gray-300 max-w-4xl leading-relaxed mb-10 border-r-4 border-blue-500 pr-6 text-right md:text-center md:border-none md:pr-0">
           {isHe 
-            ? "אנחנו ב-BS-SIMPLE מתמחים בפיצוח אתגרים מורכבים באמצעות פתרונות טכנולוגיים פשוטים וחכמים. החוזקה שלנו היא השילוב הייחודי בין עולמות תוכן מגוונים – מניהול מטבחים וקולינריה, דרך מוזיקה
+            ? "אנחנו ב-BS-SIMPLE מתמחים בפיצוח אתגרים מורכבים באמצעות פתרונות טכנולוגיים פשוטים וחכמים. החוזקה שלנו היא השילוב הייחודי בין עולמות תוכן מגוונים – מניהול מטבחים וקולינריה, דרך מוזיקה ואומנות, ועד למערכות ניהול מתקדמות. אנחנו הופכים כל רעיון למציאות דיגיטלית שעובדת בשבילך."
+            : "At BS-SIMPLE, we specialize in cracking complex challenges with simple, smart technological solutions. Our strength lies in the unique combination of diverse worlds - from culinary management and music to advanced admin systems. We turn every idea into a digital reality that works for you."}
+        </p>
+
+        {/* אייקונים של תחומי עיסוק */}
+        <div className="flex gap-8 mb-12 text-gray-500 justify-center">
+            <div className="flex flex-col items-center gap-2"><ChefHat size={32}/><span className="text-xs">Culinary</span></div>
+            <div className="flex flex-col items-center gap-2"><Cpu size={32}/><span className="text-xs">Tech</span></div>
+            <div className="flex flex-col items-center gap-2"><Music size={32}/><span className="text-xs">Music</span></div>
+        </div>
+
+        <a href="#projects" className="bg-white text-black px-10 py-4 rounded-full font-black text-lg hover:scale-105 transition flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+          {isHe ? "לצפייה בפיתוחים" : "VIEW PROJECTS"} <ArrowRight size={20} />
+        </a>
+      </section>
+
+      {/* Grid Projects */}
+      <section id="projects" className="py-24 bg-[#020617]">
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className="text-3xl font-bold mb-12 flex items-center gap-3 text-white/90 border-b border-white/10 pb-4">
+            <LayoutGrid className="text-blue-500" />
+            {isHe ? "הפרויקטים שלנו" : "Our Projects"}
+          </h2>
+
+          {projects.length === 0 ? (
+            <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-white/20">
+              <p className="text-xl text-gray-500">{isHe ? "טוען פרויקטים..." : "Loading projects..."}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {projects.map((p) => (
+                <div key={p.id} className="group bg-[#0f172a] rounded-3xl overflow-hidden border border-white/5 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-900/20 transition-all duration-300 relative flex flex-col h-full">
+                  
+                  {user && (
+                    <button 
+                      onClick={(e) => { e.preventDefault(); handleDelete(p.id); }}
+                      className="absolute top-4 right-4 z-20 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition shadow-lg"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
+
+                  <div className="relative h-56 overflow-hidden bg-slate-800">
+                    {p.image_url ? (
+                       <img src={p.image_url} alt={p.name_en} className="w-full h-full object-cover group-hover:scale-110 transition duration-700 opacity-90 group-hover:opacity-100" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-4xl font-black text-slate-700">BS</div>
+                    )}
+                    <div className="absolute bottom-0 left-0 right-0 h-1" style={{ backgroundColor: p.accent_color }}></div>
+                  </div>
+                  
+                  <div className="p-8 flex-1 flex flex-col">
+                    <h3 className="text-2xl font-bold mb-3 text-white">{isHe ? p.name_he : p.name_en}</h3>
+                    <p className="text-gray-400 text-sm mb-8 line-clamp-3 leading-relaxed flex-1">
+                      {isHe ? p.description_he : p.description_en}
+                    </p>
+                    
+                    <a href={p.url} target="_blank" rel="noopener noreferrer" className="mt-auto flex items-center justify-center gap-2 w-full bg-white/5 hover:bg-blue-600 text-white py-4 rounded-xl font-bold transition border border-white/10 hover:border-transparent group-hover:shadow-lg group-hover:shadow-blue-900/50">
+                      {isHe ? "כניסה לאפליקציה" : "LAUNCH APP"} <ArrowRight size={16} />
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Footer - תודות וקרדיט */}
+      <footer className="py-12 border-t border-white/10 bg-[#020617] text-center">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center gap-4">
+          <p className="text-white font-bold text-lg tracking-wide">
+             {isHe ? "פיתוח ופתרונות יצירתיים: בועז סעדה | BS-SIMPLE" : "Development & Creative Solutions: Boaz Saada | BS-SIMPLE"}
+          </p>
+          <p className="text-gray-600 text-sm">© 2026 All rights reserved.</p>
+        </div>
+      </footer>
+
+      {/* Login Modal */}
+      {showLogin && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-[#1e293b] p-8 rounded-3xl w-full max-w-sm border border-white/10 relative shadow-2xl">
+            <button onClick={() => setShowLogin(false)} className="absolute top-5 right-5 text-gray-400 hover:text-white"><X/></button>
+            <h2 className="text-2xl font-bold mb-6 text-center">Admin Login</h2>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <input type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} className="w-full bg-black/30 p-4 rounded-xl border border-white/10 focus:border-blue-500 outline-none transition" required />
+              <input type="password" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} className="w-full bg-black/30 p-4 rounded-xl border border-white/10 focus:border-blue-500 outline-none transition" required />
+              <button className="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold shadow-lg shadow-blue-900/20 transition">התחבר למערכת</button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Project Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto animate-in zoom-in-95 duration-200">
+          <div className="bg-[#1e293b] p-8 rounded-3xl w-full max-w-2xl border border-white/10 relative my-10 shadow-2xl">
+            <button onClick={() => setShowAddModal(false)} className="absolute top-6 left-6 text-gray-400 hover:text-white"><X/></button>
+            <h2 className="text-2xl font-bold mb-8 text-center text-blue-400">הוספת פרויקט חדש</h2>
+            <form onSubmit={handleAddProject} className="grid md:grid-cols-2 gap-5">
+              <div className="space-y-2">
+                <label className="text-xs text-gray-500 mr-1">שם הפרויקט (עברית)</label>
+                <input value={newProject.name_he} onChange={e=>setNewProject({...newProject, name_he: e.target.value})} className="w-full bg-black/30 p-3 rounded-xl border border-white/10 focus:border-blue-500 outline-none" required />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs text-gray-500 mr-1">Project Name (English)</label>
+                <input value={newProject.name_en} onChange={e=>setNewProject({...newProject, name_en: e.target.value})} className="w-full bg-black/30 p-3 rounded-xl border border-white/10 focus:border-blue-500 outline-none" required dir="ltr" />
+              </div>
+              <div className="md:col-span-1 space-y-2">
+                 <label className="text-xs text-gray-500 mr-1">תיאור קצר (עברית)</label>
+                 <textarea value={newProject.description_he} onChange={e=>setNewProject({...newProject, description_he: e.target.value})} className="w-full bg-black/30 p-3 rounded-xl border border-white/10 h-32 resize-none focus:border-blue-500 outline-none" />
+              </div>
+              <div className="md:col-span-1 space-y-2">
+                 <label className="text-xs text-gray-500 mr-1">Description (English)</label>
+                 <textarea value={newProject.description_en} onChange={e=>setNewProject({...newProject, description_en: e.target.value})} className="w-full bg-black/30 p-3 rounded-xl border border-white/10 h-32 resize-none focus:border-blue-500 outline-none" dir="ltr" />
+              </div>
+              <div className="md:col-span-2 space-y-2">
+                <label className="text-xs text-gray-500 mr-1">קישור לאפליקציה (URL)</label>
+                <input value={newProject.url} onChange={e=>setNewProject({...newProject, url: e.target.value})} className="w-full bg-black/30 p-3 rounded-xl border border-white/10 text-blue-400 focus:border-blue-500 outline-none" dir="ltr" />
+              </div>
+              <div className="space-y-2">
+                 <label className="text-xs text-gray-500 mr-1">קישור לתמונה</label>
+                 <input value={newProject.image_url} onChange={e=>setNewProject({...newProject, image_url: e.target.value})} className="w-full bg-black/30 p-3 rounded-xl border border-white/10 focus:border-blue-500 outline-none" dir="ltr" />
+              </div>
+              <div className="space-y-2">
+                 <label className="text-xs text-gray-500 mr-1">צבע מותג</label>
+                 <div className="flex items-center gap-2 bg-black/30 p-2 rounded-xl border border-white/10">
+                   <input type="color" value={newProject.accent_color} onChange={e=>setNewProject({...newProject, accent_color: e.target.value})} className="w-10 h-10 bg-transparent cursor-pointer rounded overflow-hidden" />
+                 </div>
+              </div>
+              <button className="md:col-span-2 bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold mt-4 shadow-lg shadow-blue-900/20 transition transform active:scale-95">שמור ופרסם באתר</button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
