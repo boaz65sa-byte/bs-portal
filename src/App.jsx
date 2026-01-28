@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Trash2, Plus, X, Globe, LogOut, ArrowRight, LayoutGrid, Cpu, Lightbulb, Music, ChefHat, Pencil } from 'lucide-react';
+import { Trash2, Plus, X, Globe, LogOut, ArrowRight, LayoutGrid, Cpu, Lightbulb, Music, ChefHat, Edit } from 'lucide-react';
 
 // חיבור למסד הנתונים
 const supabase = createClient(
@@ -21,7 +21,7 @@ export default function App() {
 
   // משתנים לניהול פרויקט (הוספה ועריכה)
   const [showModal, setShowModal] = useState(false);
-  const [editingId, setEditingId] = useState(null); // מזהה הפרויקט שאנחנו עורכים
+  const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     name_he: '', name_en: '', 
     description_he: '', description_en: '', 
@@ -66,14 +66,12 @@ export default function App() {
     }
   }
 
-  // פתיחת מודל להוספה חדשה
   function openAddModal() {
     setEditingId(null);
     setFormData({ name_he: '', name_en: '', description_he: '', description_en: '', url: '', image_url: '', accent_color: '#3b82f6' });
     setShowModal(true);
   }
 
-  // פתיחת מודל לעריכה
   function openEditModal(project) {
     setEditingId(project.id);
     setFormData({
@@ -88,28 +86,22 @@ export default function App() {
     setShowModal(true);
   }
 
-  // שמירה (מטפל גם בהוספה וגם בעדכון)
   async function handleSaveProject(e) {
     e.preventDefault();
     
     if (editingId) {
-      // עדכון פרויקט קיים
       const { error } = await supabase
         .from('projects')
         .update(formData)
         .eq('id', editingId);
-        
       if (error) alert("שגיאה בעדכון: " + error.message);
     } else {
-      // יצירת פרויקט חדש
       const { error } = await supabase
         .from('projects')
         .insert([formData]);
-        
       if (error) alert("שגיאה בשמירה: " + error.message);
     }
 
-    // סגירה ורענון
     setShowModal(false);
     fetchProjects();
   }
@@ -126,7 +118,6 @@ export default function App() {
   return (
     <div className={`min-h-screen bg-[#020617] text-white font-sans overflow-x-hidden`} dir={isHe ? "rtl" : "ltr"}>
       
-      {/* תפריט עליון */}
       <nav className="fixed w-full z-50 bg-[#020617]/80 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
           <div className="text-2xl font-black italic tracking-tighter cursor-pointer flex items-center gap-2" onClick={() => window.scrollTo(0,0)}>
@@ -157,7 +148,6 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="relative pt-40 pb-20 px-6 max-w-7xl mx-auto flex flex-col items-center text-center">
         <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-indigo-600/10 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
         
@@ -185,7 +175,6 @@ export default function App() {
         </a>
       </section>
 
-      {/* Grid Projects */}
       <section id="projects" className="py-24 bg-[#020617]">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl font-bold mb-12 flex items-center gap-3 text-white/90 border-b border-white/10 pb-4">
@@ -202,7 +191,6 @@ export default function App() {
               {projects.map((p) => (
                 <div key={p.id} className="group bg-[#0f172a] rounded-3xl overflow-hidden border border-white/5 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-900/20 transition-all duration-300 relative flex flex-col h-full">
                   
-                  {/* כפתורי ניהול (מופיעים רק למחוברים) */}
                   {user && (
                     <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 group-hover:opacity-100 transition duration-300">
                       <button 
@@ -210,7 +198,7 @@ export default function App() {
                         className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg"
                         title="ערוך פרויקט"
                       >
-                        <Pencil size={16} />
+                        <Edit size={16} />
                       </button>
                       <button 
                         onClick={(e) => { e.preventDefault(); handleDelete(p.id); }}
@@ -248,7 +236,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="py-12 border-t border-white/10 bg-[#020617] text-center">
         <div className="max-w-7xl mx-auto px-6 flex flex-col items-center gap-4">
           <p className="text-white font-bold text-lg tracking-wide">
@@ -258,7 +245,6 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Login Modal */}
       {showLogin && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-[#1e293b] p-8 rounded-3xl w-full max-w-sm border border-white/10 relative shadow-2xl">
@@ -273,7 +259,6 @@ export default function App() {
         </div>
       )}
 
-      {/* Project Modal (Add / Edit) */}
       {showModal && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto animate-in zoom-in-95 duration-200">
           <div className="bg-[#1e293b] p-8 rounded-3xl w-full max-w-2xl border border-white/10 relative my-10 shadow-2xl">
@@ -321,4 +306,4 @@ export default function App() {
       )}
     </div>
   );
-} 
+}
