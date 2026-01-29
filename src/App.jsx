@@ -122,7 +122,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
           <div className="text-2xl font-black italic tracking-tighter cursor-pointer flex items-center gap-2" onClick={() => window.scrollTo(0,0)}>
             <Lightbulb className="text-yellow-500" size={24} />
-            BS-SIMPLE
+            BS-SIMPLE pro
           </div>
           
           <div className="flex items-center gap-4">
@@ -306,4 +306,4 @@ export default function App() {
       )}
     </div>
   );
-}
+}  
