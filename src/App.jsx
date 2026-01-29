@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Trash2, Plus, X, Globe, LogOut, ArrowRight, LayoutGrid, Cpu, Lightbulb, Music, ChefHat, Edit, Image as ImageIcon } from 'lucide-react';
+import { Trash2, Plus, X, Globe, LogOut, ArrowRight, LayoutGrid, Cpu, Lightbulb, Music, ChefHat, Edit, Image as ImageIcon, Loader2 } from 'lucide-react';
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -12,6 +12,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [lang, setLang] = useState('he');
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false); // מצב טעינת תמונה
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -83,13 +84,38 @@ export default function App() {
     setShowModal(true);
   }
 
-  function handleFileSelect(e) {
-    const file = e.target.files[0];
-    if (file) {
-      const fileName = `/${file.name}`;
-      setFormData({ ...formData, image_url: fileName });
+  // --- הפונקציה החדשה להעלאת תמונות ל-Supabase ---
+  async function handleFileUpload(e) {
+    try {
+      setUploading(true);
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // יצירת שם ייחודי לקובץ (כדי למנוע התנגשויות)
+      const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, '')}`;
+
+      // 1. העלאה ל-Storage
+      const { data, error } = await supabase.storage
+        .from('images') // וודא שזה השם של התיקייה שיצרת ב-Supabase
+        .upload(fileName, file);
+
+      if (error) throw error;
+
+      // 2. קבלת הקישור הציבורי
+      const { data: { publicUrl } } = supabase.storage
+        .from('images')
+        .getPublicUrl(fileName);
+
+      // 3. עדכון הטופס עם הקישור החדש
+      setFormData({ ...formData, image_url: publicUrl });
+
+    } catch (error) {
+      alert('שגיאה בהעלאת התמונה: ' + error.message);
+    } finally {
+      setUploading(false);
     }
   }
+  // ------------------------------------------------
 
   async function handleSaveProject(e) {
     e.preventDefault();
@@ -127,10 +153,10 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
           <div className="text-2xl font-black italic tracking-tighter cursor-pointer flex items-center gap-2" onClick={() => window.scrollTo(0,0)}>
             <Lightbulb className="text-yellow-500" size={24} />
-            BS-SIMPLE pro
+            BS-SIMPLE
           </div>
           
-        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4">
             <button onClick={() => setLang(isHe ? 'en' : 'he')} className="p-2 hover:bg-white/10 rounded-full transition text-gray-400 hover:text-white font-bold text-xs">
               {isHe ? 'EN' : 'HE'}
             </button>
@@ -196,7 +222,6 @@ export default function App() {
               {projects.map((p) => (
                 <div key={p.id} className="group bg-[#0f172a] rounded-3xl overflow-hidden border border-white/5 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-900/20 transition-all duration-300 relative flex flex-col h-full">
                   
-                  {/* === התיקון כאן: נראה תמיד במובייל, ורק בריחוף במחשב === */}
                   {user && (
                     <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition duration-300">
                       <button 
@@ -294,20 +319,23 @@ export default function App() {
                 <input value={formData.url} onChange={e=>setFormData({...formData, url: e.target.value})} className="w-full bg-black/30 p-3 rounded-xl border border-white/10 text-blue-400 focus:border-blue-500 outline-none" dir="ltr" />
               </div>
               
+              {/* אזור העלאת תמונה משודרג */}
               <div className="space-y-2">
-                 <label className="text-xs text-gray-500 mr-1">בחירת תמונה (מהתיקייה public)</label>
-                 <div className="flex gap-2">
-                   <input type="file" id="filePick" className="hidden" onChange={handleFileSelect} />
-                   <input value={formData.image_url} onChange={e=>setFormData({...formData, image_url: e.target.value})} className="w-full bg-black/30 p-3 rounded-xl border border-white/10 focus:border-blue-500 outline-none" dir="ltr" placeholder="/image.jpg" />
-                   <button type="button" onClick={()=>document.getElementById('filePick').click()} className="bg-white/10 hover:bg-white/20 p-3 rounded-xl border border-white/10 transition">
-                      <ImageIcon size={20} />
+                 <label className="text-xs text-gray-500 mr-1">העלאת תמונה (מהמחשב או הנייד)</label>
+                 <div className="flex gap-2 items-center">
+                   <input type="file" id="filePick" className="hidden" onChange={handleFileUpload} accept="image/*" />
+                   
+                   <input value={formData.image_url} onChange={e=>setFormData({...formData, image_url: e.target.value})} className="w-full bg-black/30 p-3 rounded-xl border border-white/10 focus:border-blue-500 outline-none text-gray-400" dir="ltr" placeholder="כתובת התמונה תופיע כאן אוטומטית..." readOnly />
+                   
+                   <button type="button" onClick={()=>document.getElementById('filePick').click()} className="bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 p-3 rounded-xl border border-blue-500/30 transition flex items-center justify-center min-w-[50px]" disabled={uploading}>
+                      {uploading ? <Loader2 className="animate-spin" size={20} /> : <ImageIcon size={20} />}
                    </button>
                  </div>
-                 <p className="text-[10px] text-gray-500">* זכור לעשות git push לתמונה בתיקייה public</p>
+                 <p className="text-[10px] text-gray-500">* התמונה תעלה אוטומטית לשרת ותוצג באתר</p>
                  
                  {formData.image_url && (
-                   <div className="mt-2 h-20 w-full bg-black/20 rounded-lg overflow-hidden border border-white/5 flex items-center justify-center">
-                      <img src={formData.image_url} alt="Preview" className="h-full w-full object-contain" onError={(e) => e.target.style.display = 'none'} />
+                   <div className="mt-2 h-32 w-full bg-black/20 rounded-lg overflow-hidden border border-white/5 flex items-center justify-center">
+                      <img src={formData.image_url} alt="Preview" className="h-full w-full object-contain" />
                    </div>
                  )}
               </div>
@@ -318,7 +346,7 @@ export default function App() {
                    <input type="color" value={formData.accent_color} onChange={e=>setFormData({...formData, accent_color: e.target.value})} className="w-10 h-10 bg-transparent cursor-pointer rounded overflow-hidden" />
                  </div>
               </div>
-              <button className="md:col-span-2 bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold mt-4 shadow-lg shadow-blue-900/20 transition transform active:scale-95">
+              <button className="md:col-span-2 bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold mt-4 shadow-lg shadow-blue-900/20 transition transform active:scale-95" disabled={uploading}>
                 {isHe ? "שמור שינויים" : "Save Changes"}
               </button>
             </form>
