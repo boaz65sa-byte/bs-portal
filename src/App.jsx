@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Trash2, Plus, X, Globe, LogOut, ArrowRight, LayoutGrid, Cpu, Lightbulb, Music, ChefHat, Edit } from 'lucide-react';
+import { Trash2, Plus, X, Globe, LogOut, ArrowRight, LayoutGrid, Cpu, Lightbulb, Music, ChefHat, Edit, Image as ImageIcon } from 'lucide-react';
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -83,11 +83,9 @@ export default function App() {
     setShowModal(true);
   }
 
-  // פונקציה חכמה לקריאת שם הקובץ מהמחשב
   function handleFileSelect(e) {
     const file = e.target.files[0];
     if (file) {
-      // לוקח את שם הקובץ ומוסיף לו סלאש
       const fileName = `/${file.name}`;
       setFormData({ ...formData, image_url: fileName });
     }
@@ -132,7 +130,7 @@ export default function App() {
             BS-SIMPLE pro
           </div>
           
-          <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
             <button onClick={() => setLang(isHe ? 'en' : 'he')} className="p-2 hover:bg-white/10 rounded-full transition text-gray-400 hover:text-white font-bold text-xs">
               {isHe ? 'EN' : 'HE'}
             </button>
@@ -198,8 +196,9 @@ export default function App() {
               {projects.map((p) => (
                 <div key={p.id} className="group bg-[#0f172a] rounded-3xl overflow-hidden border border-white/5 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-900/20 transition-all duration-300 relative flex flex-col h-full">
                   
+                  {/* === התיקון כאן: נראה תמיד במובייל, ורק בריחוף במחשב === */}
                   {user && (
-                    <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 group-hover:opacity-100 transition duration-300">
+                    <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition duration-300">
                       <button 
                         onClick={(e) => { e.preventDefault(); openEditModal(p); }}
                         className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg"
@@ -295,24 +294,17 @@ export default function App() {
                 <input value={formData.url} onChange={e=>setFormData({...formData, url: e.target.value})} className="w-full bg-black/30 p-3 rounded-xl border border-white/10 text-blue-400 focus:border-blue-500 outline-none" dir="ltr" />
               </div>
               
-              {/* אזור בחירת תמונה משודרג */}
               <div className="space-y-2">
                  <label className="text-xs text-gray-500 mr-1">בחירת תמונה (מהתיקייה public)</label>
                  <div className="flex gap-2">
-                   {/* כפתור נסתר לבחירת קובץ */}
                    <input type="file" id="filePick" className="hidden" onChange={handleFileSelect} />
-                   
-                   {/* שדה טקסט שמראה את הנתיב */}
                    <input value={formData.image_url} onChange={e=>setFormData({...formData, image_url: e.target.value})} className="w-full bg-black/30 p-3 rounded-xl border border-white/10 focus:border-blue-500 outline-none" dir="ltr" placeholder="/image.jpg" />
-                   
-                   {/* כפתור שפותח את חלון הבחירה */}
                    <button type="button" onClick={()=>document.getElementById('filePick').click()} className="bg-white/10 hover:bg-white/20 p-3 rounded-xl border border-white/10 transition">
                       <ImageIcon size={20} />
                    </button>
                  </div>
                  <p className="text-[10px] text-gray-500">* זכור לעשות git push לתמונה בתיקייה public</p>
                  
-                 {/* תצוגה מקדימה - כדי שתראה אם זה עובד */}
                  {formData.image_url && (
                    <div className="mt-2 h-20 w-full bg-black/20 rounded-lg overflow-hidden border border-white/5 flex items-center justify-center">
                       <img src={formData.image_url} alt="Preview" className="h-full w-full object-contain" onError={(e) => e.target.style.display = 'none'} />
