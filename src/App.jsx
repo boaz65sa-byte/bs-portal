@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Trash2, Plus, X, Globe, LogOut, ArrowRight, LayoutGrid, Cpu, Lightbulb, Music, ChefHat, Edit, Image as ImageIcon } from 'lucide-react';
+import { Trash2, Plus, X, Globe, LogOut, ArrowRight, LayoutGrid, Cpu, Lightbulb, Music, ChefHat, Edit } from 'lucide-react';
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
