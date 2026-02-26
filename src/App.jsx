@@ -18,8 +18,8 @@ export default function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showLogin, setShowLogin] = useState(false);
-  const [isResetMode, setIsResetMode] = useState(false); // מצב שכחתי סיסמה
-  const [showUpdatePassword, setShowUpdatePassword] = useState(false); // חלון סיסמה חדשה
+  const [isResetMode, setIsResetMode] = useState(false);
+  const [showUpdatePassword, setShowUpdatePassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
 
   const [showModal, setShowModal] = useState(false);
@@ -40,7 +40,6 @@ export default function App() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
       
-      // ברגע שהמשתמש חוזר מהקישור שבמייל, המערכת מזהה שהוא רוצה לשנות סיסמה
       if (event === 'PASSWORD_RECOVERY') {
         setShowUpdatePassword(true);
       }
@@ -62,7 +61,6 @@ export default function App() {
     setLoading(false);
   }
 
-  // התחברות רגילה
   async function handleLogin(e) {
     e.preventDefault();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -74,13 +72,12 @@ export default function App() {
     }
   }
 
-  // בקשה לשליחת מייל איפוס
   async function handleResetRequest(e) {
     e.preventDefault();
     if (!email) return alert("אנא הזן כתובת מייל כדי שנשלח לך קישור");
     
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin, // יחזיר אותו בדיוק לאתר שלנו
+      redirectTo: window.location.origin,
     });
     
     if (error) {
@@ -92,7 +89,6 @@ export default function App() {
     }
   }
 
-  // שמירת הסיסמה החדשה (אחרי שחזר מהמייל)
   async function handleUpdatePassword(e) {
     e.preventDefault();
     const { error } = await supabase.auth.updateUser({ password: newPassword });
@@ -312,7 +308,6 @@ export default function App() {
         </div>
       </footer>
 
-      {/* חלון ההתחברות (כולל שכחתי סיסמה) */}
       {showLogin && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-[#1e293b] p-8 rounded-3xl w-full max-w-sm border border-white/10 relative shadow-2xl">
@@ -323,7 +318,6 @@ export default function App() {
             </h2>
             
             {isResetMode ? (
-              // טופס איפוס סיסמה
               <form onSubmit={handleResetRequest} className="space-y-4">
                 <p className="text-sm text-gray-400 mb-4 text-center">
                   הכנס את המייל שלך ונשלח לך קישור לאיפוס הסיסמה.
@@ -337,7 +331,6 @@ export default function App() {
                 </button>
               </form>
             ) : (
-              // טופס התחברות רגיל
               <form onSubmit={handleLogin} className="space-y-4">
                 <input type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} className="w-full bg-black/30 p-4 rounded-xl border border-white/10 focus:border-blue-500 outline-none transition text-left" dir="ltr" required />
                 <input type="password" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} className="w-full bg-black/30 p-4 rounded-xl border border-white/10 focus:border-blue-500 outline-none transition text-left" dir="ltr" required />
@@ -357,7 +350,6 @@ export default function App() {
         </div>
       )}
 
-      {/* חלון קביעת סיסמה חדשה (מופיע רק כשחוזרים מהמייל) */}
       {showUpdatePassword && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-[#1e293b] p-8 rounded-3xl w-full max-w-sm border border-white/10 relative shadow-2xl">
@@ -372,7 +364,6 @@ export default function App() {
         </div>
       )}
 
-      {/* חלון הוספה/עריכה פרויקט */}
       {showModal && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto animate-in zoom-in-95 duration-200">
           <div className="bg-[#1e293b] p-8 rounded-3xl w-full max-w-2xl border border-white/10 relative my-10 shadow-2xl">
@@ -428,4 +419,13 @@ export default function App() {
                    <input type="color" value={formData.accent_color} onChange={e=>setFormData({...formData, accent_color: e.target.value})} className="w-10 h-10 bg-transparent cursor-pointer rounded overflow-hidden" />
                  </div>
               </div>
-              <button className="md:col
+              <button className="md:col-span-2 bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold mt-4 shadow-lg shadow-blue-900/20 transition transform active:scale-95" disabled={uploading}>
+                {isHe ? "שמור שינויים" : "Save Changes"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
