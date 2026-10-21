@@ -26,7 +26,7 @@ export default function Product({ id, sub, lang, setLang, rtl }) {
         </div>
       </nav>
       {!p ? <main className="relative max-w-3xl mx-auto px-5 py-32 text-center"><a href="/" className="td-btn-primary">{t4(P.back, lang)}</a></main> :
-      sub === 'privacy' && p.privacy ? (
+      sub === 'privacy' && p.privacy && P.privacyBody ? (
         <main className="relative max-w-3xl mx-auto px-5 py-20">
           <a href={`#/app/${id}`} className="inline-flex items-center gap-1 text-sm font-bold text-orange-700"><Back size={15} /> {name}</a>
           <h1 className="td-serif text-4xl md:text-5xl font-black mt-6">{t4(P.privacy, lang)} · {name}</h1>
