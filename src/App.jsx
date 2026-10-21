@@ -4,10 +4,11 @@ import Admin from './site/Admin';
 import ThemeA from './themes/A';
 import ThemeB from './themes/B';
 import ThemeC from './themes/C';
+import ThemeD from './themes/D';
 import { DEFAULT_THEME } from './theme';
 import './site/badges.css';
 
-const THEMES = { a: ThemeA, b: ThemeB, c: ThemeC };
+const THEMES = { a: ThemeA, b: ThemeB, c: ThemeC, d: ThemeD };
 const isAdmin = () => window.location.hash.startsWith('#/admin');
 
 export default function App() {
