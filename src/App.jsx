@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AppsHub from './AppsHub';
 import { createClient } from '@supabase/supabase-js';
 import { Trash2, Plus, X, Globe, LogOut, ArrowRight, LayoutGrid, Cpu, Lightbulb, Music, ChefHat, Edit, Image as ImageIcon, Loader2 } from 'lucide-react';
 
@@ -233,10 +234,17 @@ export default function App() {
             <div className="flex flex-col items-center gap-2"><Music size={32}/><span className="text-xs">Music</span></div>
         </div>
 
+        <div className="flex flex-wrap gap-4 justify-center">
+        <a href="#apps" className="bg-blue-600 text-white px-10 py-4 rounded-full font-black text-lg hover:scale-105 transition flex items-center gap-2">
+          {isHe ? "האפליקציות שלנו" : "OUR APPS"} <ArrowRight size={20} />
+        </a>
         <a href="#projects" className="bg-white text-black px-10 py-4 rounded-full font-black text-lg hover:scale-105 transition flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.3)]">
           {isHe ? "לצפייה בפיתוחים" : "VIEW PROJECTS"} <ArrowRight size={20} />
         </a>
+        </div>
       </section>
+
+      <AppsHub isHe={isHe} />
 
       <section id="projects" className="py-24 bg-[#020617]">
         <div className="max-w-7xl mx-auto px-6">
