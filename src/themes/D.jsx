@@ -8,6 +8,7 @@ import { t4, S, Icon } from './common';
 import { Legal as LegalA } from './A';
 const Legal = () => <LegalA className="text-stone-500" />;
 import './D.css';
+import { HOME_TO_PRODUCT, PRODUCTS, P } from '../site/products';
 
 export default function ThemeD({ lang, setLang, rtl, site }) {
   const { T, storeApps, webApps, loading } = site;
@@ -45,12 +46,22 @@ export default function ThemeD({ lang, setLang, rtl, site }) {
             <article key={a.id} className={`td-glass rounded-3xl p-6 flex flex-col ${i === 0 ? 'md:row-span-1 td-feature' : ''}`}>
               <div className="flex items-start gap-4">
                 <img src={`/apps/icons/${a.icon}`} alt={a.title} className="w-16 h-16 rounded-2xl shadow-lg" />
-                <div className="flex-1 min-w-0"><h3 className="td-serif text-xl font-extrabold">{a.title}</h3><p className="text-stone-600 text-sm leading-relaxed mt-1">{a.desc}</p></div>
+                <div className="flex-1 min-w-0"><h3 className="td-serif text-xl font-extrabold">{HOME_TO_PRODUCT[a.id] ? <a href={`#/app/${HOME_TO_PRODUCT[a.id]}`} className="hover:text-orange-700">{a.title}</a> : a.title}</h3><p className="text-stone-600 text-sm leading-relaxed mt-1">{a.desc}</p></div>
                 {a.links?.web && <a href={a.links.web} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-stone-900/5 hover:bg-stone-900/10" title={T.website}><ArrowUpRight size={16} /></a>}
               </div>
               <div className="mt-5 pt-4 border-t border-stone-900/10"><Badges app={a} lang={lang} soon={T.soon} h={28} /></div>
+              {HOME_TO_PRODUCT[a.id] && <a href={`#/app/${HOME_TO_PRODUCT[a.id]}`} className="mt-4 self-start text-sm font-bold text-orange-700 hover:text-orange-900">{t4(P.more, lang)} {rtl ? '←' : '→'}</a>}
             </article>
           ))}
+          {(() => { const w = PRODUCTS.winrswipe; return (
+            <article className="td-glass rounded-3xl p-6 flex flex-col">
+              <div className="flex items-start gap-4">
+                <img src={w.icon} alt={w.name} className="w-16 h-16 rounded-2xl shadow-lg" />
+                <div className="flex-1 min-w-0"><h3 className="td-serif text-xl font-extrabold"><a href="#/app/winrswipe" className="hover:text-orange-700">{w.name}</a> <span className="text-xs font-bold rounded-full px-2 py-0.5 bg-orange-100 text-orange-800 align-middle">{t4(P.soonBadge, lang)}</span></h3><p className="text-stone-600 text-sm leading-relaxed mt-1">{t4(w.tagline, lang)}</p></div>
+              </div>
+              <div className="mt-5 pt-4 border-t border-stone-900/10"><Badges app={{ links: {} }} lang={lang} soon={T.soon} h={28} /></div>
+              <a href="#/app/winrswipe" className="mt-4 self-start text-sm font-bold text-orange-700 hover:text-orange-900">{t4(P.more, lang)} {rtl ? '←' : '→'}</a>
+            </article>); })()}
         </div>
         <div className="text-center mt-6"><a href="/apps" className="text-sm font-bold text-orange-700 hover:text-orange-700">{T.allApps}</a></div>
       </section>
