@@ -1,0 +1,8 @@
+.bdg-row{display:flex;flex-wrap:wrap;gap:6px 5px;justify-content:center;align-items:flex-start}
+.bdg-slot{display:flex;flex-direction:column;align-items:center;gap:3px;transition:transform .15s}
+a.bdg-slot:hover{transform:translateY(-2px)}
+.bdg-slot.soon{opacity:.38;filter:grayscale(1);cursor:default}
+.bdg-slot.soon.light{opacity:.45}
+.bdg-slot small{font-size:10px;line-height:1;color:#6b7280}
+.bdg{height:var(--h);width:auto;display:block}
+.bdg-play{height:calc(var(--h)*1.488);margin:calc(var(--h)*-.244)}

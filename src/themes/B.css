@@ -1,0 +1,7 @@
+.tb{background:#f6f1e8;color:#1c1917;font-family:Heebo,'Noto Sans Arabic',system-ui,sans-serif}
+.tb-serif{font-family:'Frank Ruhl Libre',Georgia,'Noto Sans Arabic',serif}
+.tb-h1{font-size:clamp(2.8rem,8vw,6.2rem)}
+.tb-btn{display:inline-flex;padding:.8rem 1.5rem;border-radius:999px;background:#1c1917;color:#f6f1e8;font-weight:700;transition:background .2s}.tb-btn:hover{background:#c2410c}
+.tb-btn-line{display:inline-flex;padding:.8rem 1.5rem;border-radius:999px;border:1px solid #1c1917;font-weight:700}
+.tb-strip{scrollbar-width:none}.tb-strip::-webkit-scrollbar{display:none}
+.tb .bdg-slot small{color:#a8a29e}
