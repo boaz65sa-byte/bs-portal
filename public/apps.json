@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "updated": "2026-10-21",
+  "credit": "bs-simple.com · פתרונות יצירתיים · בועז סעדה",
+  "page": "https://www.bs-simple.com/apps",
+  "apps": [
+    {
+      "id": "muzikclub",
+      "name": "MuzikClub",
+      "icon": "muzikclub.png",
+      "he": "מרכז מוזיקה ועמדת DJ: ספרייה, מיקס אוטומטי, קריוקי ושינוי סולם.",
+      "en": "Music hub and DJ station: library, auto-mix, karaoke and key change.",
+      "links": {
+        "web": "https://www.bs-simple.com/apps"
+      }
+    },
+    {
+      "id": "vaad",
+      "name": "ניהול דיירים",
+      "name_en": "Tenant Manager",
+      "icon": "vaad.png",
+      "he": "ועד בית מהטלפון: דיירים, תשלומים, הוצאות ודוחות במקום אחד.",
+      "en": "Your building committee in your pocket: tenants, payments, expenses and reports.",
+      "links": {
+        "appstore": "https://apps.apple.com/il/app/id6819025973",
+        "web": "https://boaz65sa-byte.github.io/Belding-/"
+      }
+    },
+    {
+      "id": "snapchef",
+      "name": "SnapChef",
+      "icon": "snapchef.png",
+      "he": "מצלמים מתכון ומקבלים ספר מתכונים אישי, וגם רעיונות ממה שיש במקרר.",
+      "en": "Snap any recipe into your personal cookbook and get ideas from what's in your fridge.",
+      "links": {
+        "appstore": "https://apps.apple.com/il/app/id6819405074"
+      }
+    },
+    {
+      "id": "iluy",
+      "name": "עילוי ונשמה",
+      "name_en": "Iluy VeNeshama",
+      "icon": "iluy.png",
+      "he": "סידור אזכרה מלא לפי שם הנפטר: נר נשמה, תהילים ותפילות שלב אחר שלב.",
+      "en": "A complete memorial prayer guide built from the name of your loved one.",
+      "links": {
+        "appstore": "https://apps.apple.com/il/app/id6800755061"
+      }
+    },
+    {
+      "id": "tagarshanli",
+      "name": "תגרשן לי",
+      "name_en": "Tagarshan Li",
+      "icon": "tagarshanli.png",
+      "he": "ליווי לגירושין בישראל: מפת דרכים אישית, צ'ק-ליסט ומידע מסודר.",
+      "en": "Your guide through divorce in Israel: personal roadmap, smart checklist and clear info.",
+      "links": {
+        "appstore": "https://apps.apple.com/il/app/id6801187843"
+      }
+    },
+    {
+      "id": "hotelservice",
+      "name": "Hotel Service",
+      "icon": "hotelservice.png",
+      "he": "אפליקציית צוות למלונות: קריאות שירות, בקשות אורחים ומשימות בזמן אמת.",
+      "en": "Hotel staff app: service calls, guest requests and tasks in real time.",
+      "links": {
+        "appstore": "https://apps.apple.com/il/app/id6806971270"
+      }
+    },
+    {
+      "id": "bouzouki",
+      "name": "Bouzouki Academy",
+      "icon": "bouzouki.png",
+      "he": "לומדים בוזוקי יווני: סולמות על הגריף, השמעה חיה ותרגול בעברית.",
+      "en": "Learn Greek bouzouki: scales on an interactive fretboard with live playback.",
+      "links": {
+        "appstore": "https://apps.apple.com/il/app/id6799954377",
+        "web": "https://bouzoukifret.vercel.app"
+      }
+    },
+    {
+      "id": "proagents",
+      "name": "ProAgents",
+      "name_en": "ProAgents",
+      "icon": "proagents.png",
+      "he": "פרו־סוכנים: כתובת אחת לכל הסוכנים המקצועיים, עם משימות מוכנות ושיחה פשוטה.",
+      "en": "One place for professional AI agents: ready-made tasks, clear skills, chat-style.",
+      "links": {
+        "web": "https://proagents.vercel.app"
+      }
+    }
+  ]
+}
