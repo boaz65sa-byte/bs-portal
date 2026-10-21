@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AppsHub from './AppsHub';
+import { LANGS, RTL, UI, projectText } from './i18n';
 import { createClient } from '@supabase/supabase-js';
 import { Trash2, Plus, X, Globe, LogOut, ArrowRight, LayoutGrid, Cpu, Lightbulb, Music, ChefHat, Edit, Image as ImageIcon, Loader2 } from 'lucide-react';
 
@@ -11,7 +12,8 @@ const supabase = createClient(
 export default function App() {
   const [projects, setProjects] = useState([]);
   const [user, setUser] = useState(null);
-  const [lang, setLang] = useState('he');
+  const [lang, setLangState] = useState(() => { try { const v = localStorage.getItem('bs-lang'); return LANGS.includes(v) ? v : 'he'; } catch { return 'he'; } });
+  const setLang = (v) => { setLangState(v); try { localStorage.setItem('bs-lang', v); } catch {} };
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   
@@ -32,6 +34,9 @@ export default function App() {
   });
 
   const isHe = lang === 'he';
+  const T = UI[lang] || UI.he;
+  const isRtl = !!RTL[lang];
+  useEffect(() => { document.documentElement.lang = lang; document.documentElement.dir = isRtl ? 'rtl' : 'ltr'; }, [lang]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -180,7 +185,7 @@ export default function App() {
   if (loading) return <div className="min-h-screen bg-[#020617] text-blue-500 flex items-center justify-center font-mono">LOADING BS-SIMPLE...</div>;
 
   return (
-    <div className={`min-h-screen bg-[#020617] text-white font-sans overflow-x-hidden`} dir={isHe ? "rtl" : "ltr"}>
+    <div className={`min-h-screen bg-[#020617] text-white font-sans overflow-x-hidden`} dir={isRtl ? "rtl" : "ltr"}>
       
       <nav className="fixed w-full z-50 bg-[#020617]/80 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
@@ -190,14 +195,16 @@ export default function App() {
           </div>
           
           <div className="flex items-center gap-4">
-            <button onClick={() => setLang(isHe ? 'en' : 'he')} className="p-2 hover:bg-white/10 rounded-full transition text-gray-400 hover:text-white font-bold text-xs">
-              {isHe ? 'EN' : 'HE'}
-            </button>
+            <div className="flex items-center rounded-full border border-white/10 bg-white/5 p-0.5" role="group" aria-label="Language">
+              {LANGS.map(l => (
+                <button key={l} onClick={() => setLang(l)} aria-pressed={lang === l} className={`px-2 py-1 rounded-full text-[11px] font-bold transition ${lang === l ? 'bg-white text-black' : 'text-gray-400 hover:text-white'}`}>{l.toUpperCase()}</button>
+              ))}
+            </div>
             
             {user ? (
                <div className="flex gap-2">
                  <button onClick={openAddModal} className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 transition shadow-lg shadow-blue-900/20">
-                    <Plus size={16}/> {isHe ? "הוסף פרויקט" : "Add Project"}
+                    <Plus size={16}/> {T.add}
                  </button>
                  <button onClick={() => supabase.auth.signOut()} className="bg-red-500/10 text-red-400 hover:bg-red-500/20 p-2 rounded-full transition">
                     <LogOut size={20}/>
@@ -205,7 +212,7 @@ export default function App() {
                </div>
             ) : (
                <button onClick={() => { setShowLogin(true); setIsResetMode(false); }} className="bg-white/5 hover:bg-white/10 px-5 py-2 rounded-full text-sm font-bold transition border border-white/5">
-                  {isHe ? "כניסה למנהל" : "Admin Login"}
+                  {T.admin}
                </button>
             )}
           </div>
@@ -216,16 +223,14 @@ export default function App() {
         <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-indigo-600/10 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
         
         <h1 className="text-5xl md:text-8xl font-black mb-8 tracking-tighter leading-[1.1]">
-          {isHe ? "פתרונות יצירתיים" : "CREATIVE SOLUTIONS"} <br />
+          {T.heroA} <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">
-            {isHe ? "בחשיבה אחרת" : "OUT OF THE BOX"}
+            {T.heroB}
           </span>
         </h1>
         
         <p className="text-lg md:text-2xl text-gray-300 max-w-4xl leading-relaxed mb-10 border-r-4 border-blue-500 pr-6 text-right md:text-center md:border-none md:pr-0">
-          {isHe 
-            ? "אנחנו ב-BS-SIMPLE מתמחים בפיצוח אתגרים מורכבים באמצעות פתרונות טכנולוגיים פשוטים וחכמים. החוזקה שלנו היא השילוב הייחודי בין עולמות תוכן מגוונים – מניהול מטבחים וקולינריה, דרך מוזיקה ואומנות, ועד למערכות ניהול מתקדמות. אנחנו הופכים כל רעיון למציאות דיגיטלית שעובדת בשבילך."
-            : "At BS-SIMPLE, we specialize in cracking complex challenges with simple, smart technological solutions. Our strength lies in the unique combination of diverse worlds - from culinary management and music to advanced admin systems. We turn every idea into a digital reality that works for you."}
+          {T.heroP}
         </p>
 
         <div className="flex gap-8 mb-12 text-gray-500 justify-center">
@@ -236,30 +241,30 @@ export default function App() {
 
         <div className="flex flex-wrap gap-4 justify-center">
         <a href="#apps" className="bg-blue-600 text-white px-10 py-4 rounded-full font-black text-lg hover:scale-105 transition flex items-center gap-2">
-          {isHe ? "האפליקציות שלנו" : "OUR APPS"} <ArrowRight size={20} />
+          {T.ourApps} <ArrowRight size={20} />
         </a>
         <a href="#projects" className="bg-white text-black px-10 py-4 rounded-full font-black text-lg hover:scale-105 transition flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-          {isHe ? "לצפייה בפיתוחים" : "VIEW PROJECTS"} <ArrowRight size={20} />
+          {T.viewProjects} <ArrowRight size={20} />
         </a>
         </div>
       </section>
 
-      <AppsHub isHe={isHe} />
+      <AppsHub lang={lang} />
 
       <section id="projects" className="py-24 bg-[#020617]">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl font-bold mb-12 flex items-center gap-3 text-white/90 border-b border-white/10 pb-4">
             <LayoutGrid className="text-blue-500" />
-            {isHe ? "הפרויקטים שלנו" : "Our Projects"}
+            {T.projects}
           </h2>
 
           {projects.length === 0 ? (
             <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-white/20">
-              <p className="text-xl text-gray-500">{isHe ? "טוען פרויקטים..." : "Loading projects..."}</p>
+              <p className="text-xl text-gray-500">{T.loading}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projects.map((p) => (
+              {projects.map((p) => { const tx = projectText(p, lang); return (
                 <div key={p.id} className="group bg-[#0f172a] rounded-3xl overflow-hidden border border-white/5 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-900/20 transition-all duration-300 relative flex flex-col h-full">
                   
                   {user && (
@@ -291,17 +296,17 @@ export default function App() {
                   </div>
                   
                   <div className="p-8 flex-1 flex flex-col">
-                    <h3 className="text-2xl font-bold mb-3 text-white">{isHe ? p.name_he : p.name_en}</h3>
+                    <h3 className="text-2xl font-bold mb-3 text-white">{tx.name}</h3>
                     <p className="text-gray-400 text-sm mb-8 line-clamp-3 leading-relaxed flex-1">
-                      {isHe ? p.description_he : p.description_en}
+                      {tx.desc}
                     </p>
                     
                     <a href={p.url} target="_blank" rel="noopener noreferrer" className="mt-auto flex items-center justify-center gap-2 w-full bg-white/5 hover:bg-blue-600 text-white py-4 rounded-xl font-bold transition border border-white/10 hover:border-transparent group-hover:shadow-lg group-hover:shadow-blue-900/50">
-                      {isHe ? "כניסה לאפליקציה" : "LAUNCH APP"} <ArrowRight size={16} />
+                      {T.launch} <ArrowRight size={16} />
                     </a>
                   </div>
                 </div>
-              ))}
+              ); })}
             </div>
           )}
         </div>
@@ -310,7 +315,7 @@ export default function App() {
       <footer className="py-12 border-t border-white/10 bg-[#020617] text-center">
         <div className="max-w-7xl mx-auto px-6 flex flex-col items-center gap-4">
           <p className="text-white font-bold text-lg tracking-wide">
-             {isHe ? "פיתוח ופתרונות יצירתיים: בועז סעדה | BS-SIMPLE" : "Development & Creative Solutions: Boaz Saada | BS-SIMPLE"}
+             {T.footer}
           </p>
           <p className="text-gray-600 text-sm">© 2026 All rights reserved.</p>
         </div>
