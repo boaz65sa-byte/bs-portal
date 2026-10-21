@@ -39,7 +39,7 @@ export default function AppsHub({ isHe }) {
                     return L[k] ? (
                       <a key={k} className="hub-slot" href={L[k]} target="_blank" rel="noopener noreferrer">{img}<span className="plat">{plat}</span></a>
                     ) : (
-                      <div key={k} className="hub-slot soon" title="בקרוב · Coming soon"><span className="tag">{isHe ? 'בקרוב · Coming soon' : 'Coming soon'}</span>{img}<span className="plat">{plat}</span></div>
+                      <div key={k} className="hub-slot soon" title={isHe ? `${plat} · בקרוב` : `${plat} · Coming soon`}>{img}<span className="plat">{isHe ? 'בקרוב' : 'Soon'}</span></div>
                     );
                   })}
                 </div>
@@ -49,6 +49,7 @@ export default function AppsHub({ isHe }) {
           })}
         </div>
         <div className="text-center mt-8"><a href="/apps" className="text-blue-400 hover:text-blue-300 font-bold">{isHe ? 'לעמוד כל האפליקציות ←' : 'All apps page →'}</a></div>
+        <p className="hub-legal" style={{color:"#6b7280",fontSize:12}}>bs-simple.com · פתרונות יצירתיים · בועז סעדה</p>
         <p className="hub-legal" dir="ltr">Apple, the Apple logo, iPhone, iPad and Mac are trademarks of Apple Inc., registered in the U.S. and other countries and regions. App Store and Mac App Store are service marks of Apple Inc. Google Play and the Google Play logo are trademarks of Google LLC. Samsung, Galaxy and Galaxy Store are trademarks of Samsung Electronics Co., Ltd. Microsoft, Windows and the Microsoft Store badge are trademarks of the Microsoft group of companies.</p>
       </div>
     </section>
