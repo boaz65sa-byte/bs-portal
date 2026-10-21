@@ -1,6 +1,6 @@
 // Direction D — "Aurora Atelier": A layout (glow, glass bento, floating icons) in B warm paper palette + serif headings.
 import React from 'react';
-import { ArrowUpRight, Lightbulb, Settings } from 'lucide-react';
+import { ArrowUpRight, Settings } from 'lucide-react';
 import Badges from '../site/Badges';
 import LangSwitch from '../site/LangSwitch';
 import { CREDIT } from '../site/useSite';
@@ -17,7 +17,7 @@ export default function ThemeD({ lang, setLang, rtl, site }) {
       <div className="td-aurora" aria-hidden />
       <nav className="sticky top-0 z-40 backdrop-blur-xl bg-[#f6f1e8]/75 border-b border-stone-900/10">
         <div className="max-w-7xl mx-auto px-5 h-16 flex items-center justify-between">
-          <a href="#top" className="flex items-center gap-2 font-black tracking-tight text-lg"><Lightbulb className="text-orange-600" size={20} /> BS-SIMPLE</a>
+          <a href="#top" className="flex items-center gap-2 font-black tracking-tight text-lg"><img src="/brand/monogram.svg" alt="bs-simple" className="w-11 h-11" /> BS-SIMPLE</a>
           <div className="hidden md:flex gap-6 text-sm text-stone-600"><a href="#apps" className="hover:text-orange-700">{T.ourApps}</a><a href="#projects" className="hover:text-orange-700">{T.projects}</a><a href="/apps" className="hover:text-orange-700">/apps</a></div>
           <div className="flex items-center gap-2"><LangSwitch lang={lang} setLang={setLang} className="bg-stone-900/5 border border-stone-900/15" /><a href="#/admin" title={T.admin} className="p-2 rounded-full hover:bg-stone-900/10 text-stone-600"><Settings size={16} /></a></div>
         </div>
@@ -71,7 +71,7 @@ export default function ThemeD({ lang, setLang, rtl, site }) {
 
 
       <footer className="border-t border-stone-900/10 py-10 text-center text-sm text-stone-600">
-        <p className="font-bold text-stone-900">{T.footer}</p><p className="mt-2">{CREDIT}</p><p className="mt-1 text-xs text-stone-500">© 2026</p>
+        <p className="font-bold text-stone-900">{T.footer}</p><p className="mt-3 flex items-center justify-center gap-2"><img src="/brand/monogram.svg" alt="bs-simple" className="w-10 h-10" /><span>{CREDIT}</span></p><p className="mt-1 text-xs text-stone-500">© 2026</p>
         <Legal />
       </footer>
     </div>
